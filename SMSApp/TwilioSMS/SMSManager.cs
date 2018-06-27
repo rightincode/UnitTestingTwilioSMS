@@ -1,5 +1,6 @@
 ﻿using System;
 using Twilio;
+using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
 using TwilioSMS.Interfaces;
 
@@ -16,12 +17,12 @@ namespace TwilioSMS
             AccountSID = accountSID;
             AuthToken = authToken;
         }
-        public void Authenticate()
+        public bool Authenticate()
         {
             throw new NotImplementedException();
         }
 
-        public string SendSMS(string ToPhoneNumber)
+        public bool SendSMS(string ToPhoneNumber)
         {
             throw new NotImplementedException();
         }

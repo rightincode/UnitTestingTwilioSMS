@@ -9,8 +9,8 @@ namespace TwilioSMS.Interfaces
         string AccountSID { get; }
         string AuthToken { get; }
 
-        void Authenticate();
+        bool Authenticate();
 
-        string SendSMS(string ToPhoneNumber);
+        bool SendSMS(string ToPhoneNumber);
     }
 }
