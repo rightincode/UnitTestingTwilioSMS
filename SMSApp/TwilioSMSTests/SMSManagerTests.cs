@@ -27,15 +27,32 @@ namespace TwilioSMSTests
         [TestMethod]
         public void Authenticate_ValidCredentials_Success()
         {
-            var smsManager = new SMSManager(AccountSID, AuthToken);
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
 
             Assert.IsTrue(smsManager.Authenticate());
         }
 
         [TestMethod]
+        public void Authenticate_InvalidCredentials_Failure()
+        {
+            var smsManager = new SMSManager();
+
+            Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
+                () => smsManager.Authenticate());
+        }
+
+        [TestMethod]
         public void SendSMS_ValidNumber_Queued()
         {
-            var smsManager = new SMSManager(AccountSID, AuthToken);
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
 
             MessageResource messageResource = smsManager.SendSMS(ValidToNumber, ValidFromNumber, SMSMessage);
 
@@ -46,7 +63,11 @@ namespace TwilioSMSTests
         [TestMethod]
         public async Task SendSMSAsync_ValidNumber_Queued()
         {
-            var smsManager = new SMSManager(AccountSID, AuthToken);
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
 
             MessageResource messageResource = await smsManager.SendSMSAsync(ValidToNumber, ValidFromNumber, SMSMessage);
 

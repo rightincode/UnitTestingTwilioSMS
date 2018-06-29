@@ -11,14 +11,12 @@ namespace TwilioSMS
 {
     public class SMSManager : ISMSManager
     {
-        public string AccountSID { get; private set; }
+        public string AccountSID { get; set; }
 
-        public string AuthToken { get; private set; }
+        public string AuthToken { get; set; }
 
-        public SMSManager(string accountSID, string authToken)
+        public SMSManager()
         {
-            AccountSID = accountSID;
-            AuthToken = authToken;
         }
         public bool Authenticate()
         {
