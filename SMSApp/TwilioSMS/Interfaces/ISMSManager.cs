@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace TwilioSMS.Interfaces
 {
@@ -11,6 +13,8 @@ namespace TwilioSMS.Interfaces
 
         bool Authenticate();
 
-        bool SendSMS(string ToPhoneNumber);
+        MessageResource SendSMS(string toPhoneNumber, string fromPhoneNumber, string message);
+
+        Task<MessageResource> SendSMSAsync(string toPhoneNumber, string fromPhoneNumber, string message);
     }
 }

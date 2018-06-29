@@ -3,6 +3,9 @@ using Twilio;
 using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
 using TwilioSMS.Interfaces;
+using Twilio.Exceptions;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TwilioSMS
 {
@@ -19,12 +22,55 @@ namespace TwilioSMS
         }
         public bool Authenticate()
         {
-            throw new NotImplementedException();
+            TwilioClient.Init(AccountSID, AuthToken);
+
+            var restClient = TwilioClient.GetRestClient();
+
+            return (restClient.AccountSid == AccountSID) ? true : false;
         }
 
-        public bool SendSMS(string ToPhoneNumber)
+        public MessageResource SendSMS(string toPhoneNumber, string fromPhoneNumber, string message)
         {
-            throw new NotImplementedException();
+            MessageResource messageResource = null;
+
+            try
+            {
+                TwilioClient.Init(AccountSID, AuthToken);
+
+                messageResource = MessageResource.Create(body: message,
+                    from: new PhoneNumber(fromPhoneNumber),
+                    to: new PhoneNumber(toPhoneNumber));
+                               
+            }
+            catch (ApiException e)
+            {
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+            }
+
+            return messageResource;
+        }
+
+        public async Task<MessageResource> SendSMSAsync(string toPhoneNumber, string fromPhoneNumber, string message)
+        {
+            MessageResource messageResource = null;
+
+            try
+            {
+                TwilioClient.Init(AccountSID, AuthToken);
+
+                messageResource = await MessageResource.CreateAsync(body: message,
+                    from: new PhoneNumber(fromPhoneNumber),
+                    to: new PhoneNumber(toPhoneNumber));
+
+            }
+            catch (ApiException e)
+            {
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+            }
+
+            return messageResource;
         }
     }
 }
