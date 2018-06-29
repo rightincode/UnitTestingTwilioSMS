@@ -40,10 +40,16 @@ namespace TwilioSMS
                     to: new PhoneNumber(toPhoneNumber));
                                
             }
+            catch (AuthenticationException e)
+            {
+                Debug.WriteLine(e.Message);
+                throw e;
+            }
             catch (ApiException e)
             {
                 Debug.WriteLine(e.Message);
                 Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+                throw e;
             }
 
             return messageResource;
@@ -62,10 +68,16 @@ namespace TwilioSMS
                     to: new PhoneNumber(toPhoneNumber));
 
             }
+            catch (AuthenticationException e)
+            {
+                Debug.WriteLine(e.Message);
+                throw e;
+            }
             catch (ApiException e)
             {
                 Debug.WriteLine(e.Message);
                 Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+                throw e;
             }
 
             return messageResource;

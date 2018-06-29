@@ -12,6 +12,8 @@ namespace TwilioSMSTests
         private string AuthToken { get; set; }
         private string ValidToNumber { get; set; }
         private string ValidFromNumber { get; set; }
+        private string InvalidToNumber { get; set; }
+        private string InvalidFromNumber { get; set; }
         private string SMSMessage { get; set; }
 
         [TestInitialize]
@@ -21,6 +23,8 @@ namespace TwilioSMSTests
             AuthToken = "67a209768e77668fb14d11cb28f47c32";
             ValidToNumber = "17047771927";
             ValidFromNumber = "15005550006";
+            InvalidToNumber = "1777777777";
+            InvalidFromNumber = "1777777777";
             SMSMessage = "Test message from SMSManagerTests";
         }
 
@@ -37,7 +41,7 @@ namespace TwilioSMSTests
         }
 
         [TestMethod]
-        public void Authenticate_InvalidCredentials_Failure()
+        public void Authenticate_InvalidCredentials_AuthenticationException()
         {
             var smsManager = new SMSManager();
 
@@ -61,6 +65,28 @@ namespace TwilioSMSTests
         }
 
         [TestMethod]
+        public void SendSMS_ValidNumberInvalidCredentials_AuthenticationException()
+        {
+            var smsManager = new SMSManager();
+
+            Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
+                () => smsManager.SendSMS(ValidToNumber, ValidFromNumber, SMSMessage));
+        }
+
+        [TestMethod]
+        public void SendSMS_InvalidNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(ValidToNumber, InvalidFromNumber, SMSMessage));
+        }
+
+        [TestMethod]
         public async Task SendSMSAsync_ValidNumber_Queued()
         {
             var smsManager = new SMSManager
@@ -73,6 +99,28 @@ namespace TwilioSMSTests
 
             Assert.IsNotNull(messageResource);
             Assert.IsTrue(messageResource.Status == MessageResource.StatusEnum.Queued);
+        }
+
+        [TestMethod]
+        public void SendSMSAsync_ValidNumberInvalidCredentials_AuthenticationException()
+        {
+            var smsManager = new SMSManager();
+
+            Assert.ThrowsExceptionAsync<Twilio.Exceptions.AuthenticationException>(
+              async () => await smsManager.SendSMSAsync(ValidToNumber, ValidFromNumber, SMSMessage));
+        }
+
+        [TestMethod]
+        public void SendSMSAsync_InvalidNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
+               async () => await smsManager.SendSMSAsync(ValidToNumber, InvalidFromNumber, SMSMessage));
         }
     }
 }
