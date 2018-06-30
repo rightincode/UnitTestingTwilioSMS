@@ -14,6 +14,9 @@ namespace TwilioSMSTests
         private string ValidFromNumber { get; set; }
         private string InvalidToNumber { get; set; }
         private string InvalidFromNumber { get; set; }
+        private string NotSMSCapableFromPhoneNumber { get; set; }
+        private string QueueFullFromPhoneNumber { get; set; }
+
         private string SMSMessage { get; set; }
 
         [TestInitialize]
@@ -24,7 +27,10 @@ namespace TwilioSMSTests
             ValidToNumber = "17047771927";
             ValidFromNumber = "15005550006";
             InvalidToNumber = "1777777777";
-            InvalidFromNumber = "15005550007";
+            InvalidFromNumber = "15005550001";
+            NotSMSCapableFromPhoneNumber = "15005550007";
+            QueueFullFromPhoneNumber = "15005550008";
+
             SMSMessage = "Test message from SMSManagerTests";
         }
 
@@ -50,7 +56,7 @@ namespace TwilioSMSTests
         }
 
         [TestMethod]
-        public void SendSMS_ValidNumber_Queued()
+        public void SendSMS_ValidFromNumber_Queued()
         {
             var smsManager = new SMSManager
             {
@@ -74,7 +80,7 @@ namespace TwilioSMSTests
         }
 
         [TestMethod]
-        public void SendSMS_InvalidNumber_ApiException()
+        public void SendSMS_InvalidFromNumber_ApiException()
         {
             var smsManager = new SMSManager
             {
@@ -85,11 +91,41 @@ namespace TwilioSMSTests
             var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
                 () => smsManager.SendSMS(ValidToNumber, InvalidFromNumber, SMSMessage), "Expected ApiException when using invalid from number!");
 
+            Assert.AreEqual(21212, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_NotSMSCapableFromPhoneNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(ValidToNumber, NotSMSCapableFromPhoneNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
             Assert.AreEqual(21606, returnedException.Code);
         }
 
         [TestMethod]
-        public async Task SendSMSAsync_ValidNumber_Queued()
+        public void SendSMS_QueueFullFromPhoneNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(ValidToNumber, QueueFullFromPhoneNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
+            Assert.AreEqual(21611, returnedException.Code);
+        }
+
+        [TestMethod]
+        public async Task SendSMSAsync_ValidFromNumber_Queued()
         {
             var smsManager = new SMSManager
             {
@@ -113,7 +149,7 @@ namespace TwilioSMSTests
         }
 
         [TestMethod]
-        public async Task SendSMSAsync_InvalidNumber_ApiException()
+        public async Task SendSMSAsync_InvalidFromNumber_ApiException()
         {
             var smsManager = new SMSManager
             {
@@ -124,7 +160,37 @@ namespace TwilioSMSTests
             var returnedException = await Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
                async () => await smsManager.SendSMSAsync(ValidToNumber, InvalidFromNumber, SMSMessage), "Expected ApiException when using invalid from number!");
 
+            Assert.AreEqual(21212, returnedException.Code);
+        }
+
+        [TestMethod]
+        public async Task SendSMSAsync_NotSMSCapableFromPhoneNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = await Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
+               async () => await smsManager.SendSMSAsync(ValidToNumber, NotSMSCapableFromPhoneNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
             Assert.AreEqual(21606, returnedException.Code);
+        }
+
+        [TestMethod]
+        public async Task SendSMSAsync_QueueFullFromPhoneNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = await Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
+               async () => await smsManager.SendSMSAsync(ValidToNumber, QueueFullFromPhoneNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
+            Assert.AreEqual(21611, returnedException.Code);
         }
     }
 }
