@@ -24,7 +24,7 @@ namespace TwilioSMSTests
             ValidToNumber = "17047771927";
             ValidFromNumber = "15005550006";
             InvalidToNumber = "1777777777";
-            InvalidFromNumber = "1777777777";
+            InvalidFromNumber = "15005550007";
             SMSMessage = "Test message from SMSManagerTests";
         }
 
@@ -46,7 +46,7 @@ namespace TwilioSMSTests
             var smsManager = new SMSManager();
 
             Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
-                () => smsManager.Authenticate());
+                () => smsManager.Authenticate(), "Expected AuthenticationException when using invalid from number!");
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace TwilioSMSTests
             var smsManager = new SMSManager();
 
             Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
-                () => smsManager.SendSMS(ValidToNumber, ValidFromNumber, SMSMessage));
+                () => smsManager.SendSMS(ValidToNumber, ValidFromNumber, SMSMessage), "Expected AuthenticationException when using invalid from number!");
         }
 
         [TestMethod]
@@ -82,8 +82,10 @@ namespace TwilioSMSTests
                 AuthToken = AuthToken
             };
 
-            Assert.ThrowsException<Twilio.Exceptions.ApiException>(
-                () => smsManager.SendSMS(ValidToNumber, InvalidFromNumber, SMSMessage));
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(ValidToNumber, InvalidFromNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
+            Assert.AreEqual(21606, returnedException.Code);
         }
 
         [TestMethod]
@@ -107,11 +109,11 @@ namespace TwilioSMSTests
             var smsManager = new SMSManager();
 
             Assert.ThrowsExceptionAsync<Twilio.Exceptions.AuthenticationException>(
-              async () => await smsManager.SendSMSAsync(ValidToNumber, ValidFromNumber, SMSMessage));
+              async () => await smsManager.SendSMSAsync(ValidToNumber, ValidFromNumber, SMSMessage), "Expected AuthenticationException when using invalid from number!");
         }
 
         [TestMethod]
-        public void SendSMSAsync_InvalidNumber_ApiException()
+        public async Task SendSMSAsync_InvalidNumber_ApiException()
         {
             var smsManager = new SMSManager
             {
@@ -119,8 +121,10 @@ namespace TwilioSMSTests
                 AuthToken = AuthToken
             };
 
-            Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
-               async () => await smsManager.SendSMSAsync(ValidToNumber, InvalidFromNumber, SMSMessage));
+            var returnedException = await Assert.ThrowsExceptionAsync<Twilio.Exceptions.ApiException>(
+               async () => await smsManager.SendSMSAsync(ValidToNumber, InvalidFromNumber, SMSMessage), "Expected ApiException when using invalid from number!");
+
+            Assert.AreEqual(21606, returnedException.Code);
         }
     }
 }
