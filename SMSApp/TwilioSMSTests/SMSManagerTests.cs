@@ -10,9 +10,15 @@ namespace TwilioSMSTests
     {
         private string AccountSID { get; set; }
         private string AuthToken { get; set; }
-        private string ValidToNumber { get; set; }
-        private string ValidFromNumber { get; set; }
+
+        private string ValidToNumber { get; set; }        
         private string InvalidToNumber { get; set; }
+        private string CannotRouteToNumber { get; set; }
+        private string CannotSendIntlSMSToNumber { get; set; }
+        private string BlacklistedToNumber { get; set; }
+        private string CannotRecieveSMSToNumber { get; set; }
+
+        private string ValidFromNumber { get; set; }
         private string InvalidFromNumber { get; set; }
         private string NotSMSCapableFromPhoneNumber { get; set; }
         private string QueueFullFromPhoneNumber { get; set; }
@@ -24,9 +30,15 @@ namespace TwilioSMSTests
         {
             AccountSID = "AC2f9aaf74f002e00e3554d4fb9a37b62d";
             AuthToken = "67a209768e77668fb14d11cb28f47c32";
-            ValidToNumber = "17047771927";
+            
             ValidFromNumber = "15005550006";
-            InvalidToNumber = "1777777777";
+            InvalidToNumber = "15005550001";
+            CannotRouteToNumber = "15005550002";
+            CannotSendIntlSMSToNumber = "15005550003";
+            BlacklistedToNumber = "15005550004";
+            CannotRecieveSMSToNumber = "15005550009";
+
+            ValidToNumber = "15005550006";
             InvalidFromNumber = "15005550001";
             NotSMSCapableFromPhoneNumber = "15005550007";
             QueueFullFromPhoneNumber = "15005550008";
@@ -92,6 +104,81 @@ namespace TwilioSMSTests
                 () => smsManager.SendSMS(ValidToNumber, InvalidFromNumber, SMSMessage), "Expected ApiException when using invalid from number!");
 
             Assert.AreEqual(21212, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_InvalidToNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(InvalidToNumber, ValidFromNumber, SMSMessage), "Expected ApiException when using invalid to number!");
+
+            Assert.AreEqual(21211, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_NonRoutableNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(CannotRouteToNumber, ValidFromNumber, SMSMessage), "Expected ApiException when using invalid to number!");
+
+            Assert.AreEqual(21612, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_NoIntlAccess_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(CannotSendIntlSMSToNumber, ValidFromNumber, SMSMessage), "Expected ApiException when using invalid to number!");
+
+            Assert.AreEqual(21408, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_BlacklistedNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(BlacklistedToNumber, ValidFromNumber, SMSMessage), "Expected ApiException when using invalid to number!");
+
+            Assert.AreEqual(21610, returnedException.Code);
+        }
+
+        [TestMethod]
+        public void SendSMS_CannotRecieveSMSToPhoneNumber_ApiException()
+        {
+            var smsManager = new SMSManager
+            {
+                AccountSID = AccountSID,
+                AuthToken = AuthToken
+            };
+
+            var returnedException = Assert.ThrowsException<Twilio.Exceptions.ApiException>(
+                () => smsManager.SendSMS(CannotRecieveSMSToNumber, ValidFromNumber, SMSMessage), "Expected ApiException when using invalid to number!");
+
+            Assert.AreEqual(21614, returnedException.Code);
         }
 
         [TestMethod]
