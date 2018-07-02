@@ -51,7 +51,7 @@ namespace SMSManagersTests
         }
 
         [TestMethod]
-        public void SendSMS_InValidToNumber_Failure()
+        public void SendSMS_InvalidToNumber_Failure()
         {
             var twilioSMSManager = new TwilioSMSManager(new TwilioSMSServiceMock(), AccountSID, AuthToken);
 
@@ -63,7 +63,7 @@ namespace SMSManagersTests
         }
 
         [TestMethod]
-        public void SendSMS_InValidFromNumber_Failure()
+        public void SendSMS_InvalidFromNumber_Failure()
         {
             var twilioSMSManager = new TwilioSMSManager(new TwilioSMSServiceMock(), AccountSID, AuthToken);
 
@@ -75,7 +75,7 @@ namespace SMSManagersTests
         }
 
         [TestMethod]
-        public void SendSMS_InValidToAndFromNumber_Failure()
+        public void SendSMS_InvalidToAndFromNumber_Failure()
         {
             var twilioSMSManager = new TwilioSMSManager(new TwilioSMSServiceMock(), AccountSID, AuthToken);
 
@@ -87,7 +87,7 @@ namespace SMSManagersTests
         }
 
         [TestMethod]
-        public async Task SendSMSAsync_InvalidAccountAIDAndAuthToken_Failure()
+        public async Task SendSMSAsync_InvalidAccountSIDAndAuthToken_Failure()
         {
             var twilioSMSManager = new TwilioSMSManager(new TwilioSMSServiceMock(), string.Empty, string.Empty);
 
