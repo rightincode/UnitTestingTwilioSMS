@@ -1,23 +1,21 @@
-﻿using System;
-using Twilio;
+﻿using Twilio;
 using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
 using TwilioSMS.Interfaces;
 using Twilio.Exceptions;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace TwilioSMS
 {
-    public class SMSManager : ISMSManager
+    public class TwilloSMSService : ITwilioSMSService
     {
         public string AccountSID { get; set; }
-
         public string AuthToken { get; set; }
 
-        public SMSManager()
+        public TwilloSMSService()
         {
         }
+
         public bool Authenticate()
         {
             TwilioClient.Init(AccountSID, AuthToken);
@@ -38,17 +36,17 @@ namespace TwilioSMS
                 messageResource = MessageResource.Create(body: message,
                     from: new PhoneNumber(fromPhoneNumber),
                     to: new PhoneNumber(toPhoneNumber));
-                               
+
             }
             catch (AuthenticationException e)
             {
-                Debug.WriteLine(e.Message);
+                //Debug.WriteLine(e.Message);
                 throw e;
             }
             catch (ApiException e)
             {
-                Debug.WriteLine(e.Message);
-                Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+                //Debug.WriteLine(e.Message);
+               // Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
                 throw e;
             }
 
@@ -70,17 +68,18 @@ namespace TwilioSMS
             }
             catch (AuthenticationException e)
             {
-                Debug.WriteLine(e.Message);
+                //Debug.WriteLine(e.Message);
                 throw e;
             }
             catch (ApiException e)
             {
-                Debug.WriteLine(e.Message);
-                Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
+                //Debug.WriteLine(e.Message);
+                //Debug.WriteLine($"Twilio Error {e.Code} - {e.MoreInfo}");
                 throw e;
             }
 
             return messageResource;
         }
+        
     }
 }

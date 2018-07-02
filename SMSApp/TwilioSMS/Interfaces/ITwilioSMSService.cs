@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Twilio.Rest.Api.V2010.Account;
 
 namespace TwilioSMS.Interfaces
 {
-    public interface ISMSManager
+    public interface ITwilioSMSService
     {
-        string AccountSID { get; }
-        string AuthToken { get; }
+        string AccountSID { get; set; }
+        string AuthToken { get; set; }
 
         bool Authenticate();
 

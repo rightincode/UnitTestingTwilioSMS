@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace TwilioSMSTests
 {
     [TestClass]
-    public class SMSManagerTests
+    public class TwilioSMSServiceTests
     {
         private string AccountSID { get; set; }
         private string AuthToken { get; set; }
@@ -26,7 +26,7 @@ namespace TwilioSMSTests
         private string SMSMessage { get; set; }
 
         [TestInitialize]
-        public void InitializeSMSManagerTests()
+        public void InitializeTwilioSMSServiceTests()
         {
             AccountSID = "AC2f9aaf74f002e00e3554d4fb9a37b62d";
             AuthToken = "67a209768e77668fb14d11cb28f47c32";
@@ -49,7 +49,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void Authenticate_ValidCredentials_Success()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -61,7 +61,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void Authenticate_InvalidCredentials_AuthenticationException()
         {
-            var smsManager = new SMSManager();
+            var smsManager = new TwilloSMSService();
 
             Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
                 () => smsManager.Authenticate(), "Expected AuthenticationException when using invalid from number!");
@@ -70,7 +70,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_ValidFromNumber_Queued()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -85,7 +85,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_ValidNumberInvalidCredentials_AuthenticationException()
         {
-            var smsManager = new SMSManager();
+            var smsManager = new TwilloSMSService();
 
             Assert.ThrowsException<Twilio.Exceptions.AuthenticationException>(
                 () => smsManager.SendSMS(ValidToNumber, ValidFromNumber, SMSMessage), "Expected AuthenticationException when using invalid from number!");
@@ -94,7 +94,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_InvalidFromNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -109,7 +109,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_InvalidToNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -124,7 +124,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_NonRoutableNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -139,7 +139,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_NoIntlAccess_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -154,7 +154,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_BlacklistedNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -169,7 +169,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_CannotRecieveSMSToPhoneNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -184,7 +184,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_NotSMSCapableFromPhoneNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -199,7 +199,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMS_QueueFullFromPhoneNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -214,7 +214,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public async Task SendSMSAsync_ValidFromNumber_Queued()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -229,7 +229,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public void SendSMSAsync_ValidNumberInvalidCredentials_AuthenticationException()
         {
-            var smsManager = new SMSManager();
+            var smsManager = new TwilloSMSService();
 
             Assert.ThrowsExceptionAsync<Twilio.Exceptions.AuthenticationException>(
               async () => await smsManager.SendSMSAsync(ValidToNumber, ValidFromNumber, SMSMessage), "Expected AuthenticationException when using invalid from number!");
@@ -238,7 +238,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public async Task SendSMSAsync_InvalidFromNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -253,7 +253,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public async Task SendSMSAsync_NotSMSCapableFromPhoneNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
@@ -268,7 +268,7 @@ namespace TwilioSMSTests
         [TestMethod]
         public async Task SendSMSAsync_QueueFullFromPhoneNumber_ApiException()
         {
-            var smsManager = new SMSManager
+            var smsManager = new TwilloSMSService
             {
                 AccountSID = AccountSID,
                 AuthToken = AuthToken
